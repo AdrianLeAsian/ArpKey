@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group
+        android:scaleX="0.6"
+        android:scaleY="0.6"
+        android:translateX="21.6"
+        android:translateY="21.6">
+        <!-- Main keypad body -->
+        <path
+            android:fillColor="#FFFFFF"
+            android:pathData="M24,20L84,20A4,4 0,0 1,88 24L88,84A4,4 0,0 1,84 88L24,88A4,4 0,0 1,20 84L20,24A4,4 0,0 1,24 20z"/>
+        <!-- Number keys -->
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M28,28L40,28A2,2 0,0 1,42 30L42,42A2,2 0,0 1,40 44L28,44A2,2 0,0 1,26 42L26,30A2,2 0,0 1,28 28z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M48,28L60,28A2,2 0,0 1,62 30L62,42A2,2 0,0 1,60 44L48,44A2,2 0,0 1,46 42L46,30A2,2 0,0 1,48 28z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M68,28L80,28A2,2 0,0 1,82 30L82,42A2,2 0,0 1,80 44L68,44A2,2 0,0 1,66 42L66,30A2,2 0,0 1,68 28z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M28,48L40,48A2,2 0,0 1,42 50L42,62A2,2 0,0 1,40 64L28,64A2,2 0,0 1,26 62L26,50A2,2 0,0 1,28 48z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M48,48L60,48A2,2 0,0 1,62 50L62,62A2,2 0,0 1,60 64L48,64A2,2 0,0 1,46 62L46,50A2,2 0,0 1,48 48z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M68,48L80,48A2,2 0,0 1,82 50L82,62A2,2 0,0 1,80 64L68,64A2,2 0,0 1,66 62L66,50A2,2 0,0 1,68 48z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M28,68L40,68A2,2 0,0 1,42 70L42,82A2,2 0,0 1,40 84L28,84A2,2 0,0 1,26 82L26,70A2,2 0,0 1,28 68z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M48,68L60,68A2,2 0,0 1,62 70L62,82A2,2 0,0 1,60 84L48,84A2,2 0,0 1,46 82L46,70A2,2 0,0 1,48 68z"/>
+        <path
+            android:fillColor="#2196F3"
+            android:pathData="M68,68L80,68A2,2 0,0 1,82 70L82,82A2,2 0,0 1,80 84L68,84A2,2 0,0 1,66 82L66,70A2,2 0,0 1,68 68z"/>
+    </group>
+</vector>

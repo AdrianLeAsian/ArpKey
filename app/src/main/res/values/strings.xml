@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ArpKey</string>
+    <string name="ime_name">ArpKey Keyboard</string>
+    <string name="subtype_en">English</string>
+</resources>
