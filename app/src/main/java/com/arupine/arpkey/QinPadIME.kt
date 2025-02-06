@@ -20,7 +20,8 @@ class QinPadIME : InputMethodService() {
     private var rotationMode = false
     private var rotIndex = 0
     private var lockFlag = 0 //input lock flag for long presses
-    private var currentLayoutIndex = 0 //you can change the default here
+    private var currentLayoutIndex = 0 // Always start with English layout (index 0)
+    private var lastLayoutIndex = 0 // Track the last used layout
     private val rotResetHandler = Handler(Looper.getMainLooper())
 
     //layoutIconsNormal, layoutIconsCaps and layouts must match each other
@@ -79,6 +80,9 @@ class QinPadIME : InputMethodService() {
         else {
             ic = currentInputConnection
             caps = false
+            currentLayoutIndex = 0 // Reset to English layout
+            lastLayoutIndex = 0 // Reset last layout to English
+            currentLayout = layouts[currentLayoutIndex] // Set current layout to English
             resetRotator()
             val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
             imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0)
@@ -137,6 +141,7 @@ class QinPadIME : InputMethodService() {
     override fun onKeyLongPress(keyCode: Int, event: KeyEvent): Boolean {
         when(keyCode) {
             KeyEvent.KEYCODE_POUND -> {
+                // Only send Enter key on pound key long press, don't change layout
                 ic?.let { inputConnection ->
                     inputConnection.sendKeyEvent(KeyEvent(KeyEvent.ACTION_DOWN, KeyEvent.KEYCODE_ENTER))
                     inputConnection.sendKeyEvent(KeyEvent(KeyEvent.ACTION_UP, KeyEvent.KEYCODE_ENTER))
@@ -193,7 +198,11 @@ class QinPadIME : InputMethodService() {
             caps = !caps
             updateCurrentStatusIcon()
         } else if(pound) {
-            nextLang()
+            // Only handle layout switching here
+            currentLayoutIndex = if (currentLayoutIndex == 0) 1 else 0
+            currentLayout = layouts[currentLayoutIndex]
+            updateCurrentStatusIcon()
+            resetRotator()
         } else {
             var targetSequence: CharSequence
             currentLayout = layouts[currentLayoutIndex]
