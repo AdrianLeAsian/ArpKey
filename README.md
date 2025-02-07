@@ -1,1 +1,1 @@
-tbh is basically just Qinpad minus the hewbrew layout and the added enter button(Double press # key) and an app gui.
+Base code is from QinPad credits to the owner, basically a modified version of that to fit my own needs so yeah
