@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/popup_background"
+    android:elevation="24dp"
+    android:padding="16dp">
+
+    <!-- Title -->
+    <TextView
+        android:id="@+id/popupTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Symbol"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <GridLayout
+        android:id="@+id/symbolGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="3"
+        android:rowCount="3"
+        android:alignmentMode="alignBounds"
+        android:useDefaultMargins="true">
+
+        <!-- Row 1 -->
+        <TextView
+            android:id="@+id/symbol1"
+            style="@style/SymbolTextStyle"
+            android:text="1"/>
+        <TextView
+            android:id="@+id/symbol2"
+            style="@style/SymbolTextStyle"
+            android:text="2"/>
+        <TextView
+            android:id="@+id/symbol3"
+            style="@style/SymbolTextStyle"
+            android:text="3"/>
+
+        <!-- Row 2 -->
+        <TextView
+            android:id="@+id/symbol4"
+            style="@style/SymbolTextStyle"
+            android:text="4"/>
+        <TextView
+            android:id="@+id/symbol5"
+            style="@style/SymbolTextStyle"
+            android:text="5"/>
+        <TextView
+            android:id="@+id/symbol6"
+            style="@style/SymbolTextStyle"
+            android:text="6"/>
+
+        <!-- Row 3 -->
+        <TextView
+            android:id="@+id/symbol7"
+            style="@style/SymbolTextStyle"
+            android:text="7"/>
+        <TextView
+            android:id="@+id/symbol8"
+            style="@style/SymbolTextStyle"
+            android:text="8"/>
+        <TextView
+            android:id="@+id/symbol9"
+            style="@style/SymbolTextStyle"
+            android:text="9"/>
+    </GridLayout>
+
+    <!-- Navigation hint -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="* Previous | # Next"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:layout_marginTop="16dp"/>
+
+</LinearLayout> 
