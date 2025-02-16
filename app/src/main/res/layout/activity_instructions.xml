@@ -180,7 +180,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="• Punctuation: Common punctuation marks\n• Symbols: Mathematical, currency, and special symbols\n• Emojis: Faces, hearts, activities, and more\n• Kaomoji: Text-based Japanese emoticons"
+                        android:text="• Punctuation &amp; Symbols: Common punctuation, mathematical, currency, and special symbols\n• Emojis: Faces, hearts, activities, and more\n• Kaomoji: Text-based Japanese emoticons"
                         android:textSize="16sp"
                         android:textColor="@color/black"/>
                 </LinearLayout>

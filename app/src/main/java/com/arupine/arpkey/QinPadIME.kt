@@ -63,19 +63,16 @@ class QinPadIME : InputMethodService() {
     private var currentPageInCategory = 0
 
     private val categoryTitles = listOf(
-        "Punctuation",
-        "Symbols",
+        "Punctuation & Symbols",
         "Emojis",
         "Kaomoji"
     )
 
     private object SymbolCategories {
         val PUNCTUATION = listOf(
-            listOf(".", ",", "!", "?", "'", "\"", "-", "_", ";"),  // Basic
-            listOf(":", "(", ")", "[", "]", "{", "}", "¿", "¡")    // Extended
-        )
-
-        val COMMON_SYMBOLS = listOf(
+            // Basic Punctuation
+            listOf(".", ",", "!", "?", "'", "\"", "-", "_", ";"),
+            listOf(":", "(", ")", "[", "]", "{", "}", "¿", "¡"),
             // Basic Symbols
             listOf("@", "#", "&", "*", "\\", "/", "|", "~", "^"),
             listOf("°", "•", "†", "‡", "§", "¶", "©", "®", "™"),
@@ -156,7 +153,6 @@ class QinPadIME : InputMethodService() {
 
     private val symbolPages = SymbolCategories.run {
         PUNCTUATION + 
-        COMMON_SYMBOLS + 
         EMOJIS + 
         KAOMOJI
     }
@@ -370,9 +366,8 @@ class QinPadIME : InputMethodService() {
         // Calculate total pages in current category
         val pagesInCategory = when (currentCategory) {
             0 -> SymbolCategories.PUNCTUATION.size
-            1 -> SymbolCategories.COMMON_SYMBOLS.size
-            2 -> SymbolCategories.EMOJIS.size
-            3 -> SymbolCategories.KAOMOJI.size
+            1 -> SymbolCategories.EMOJIS.size
+            2 -> SymbolCategories.KAOMOJI.size
             else -> 1
         }
         
@@ -382,9 +377,8 @@ class QinPadIME : InputMethodService() {
         // Get symbols for current category and page
         val symbols = when (currentCategory) {
             0 -> SymbolCategories.PUNCTUATION
-            1 -> SymbolCategories.COMMON_SYMBOLS
-            2 -> SymbolCategories.EMOJIS
-            3 -> SymbolCategories.KAOMOJI
+            1 -> SymbolCategories.EMOJIS
+            2 -> SymbolCategories.KAOMOJI
             else -> listOf(listOf())
         }
 
@@ -408,22 +402,20 @@ class QinPadIME : InputMethodService() {
                     // Navigate pages within category
                     val pagesInCategory = when (currentCategory) {
                         0 -> SymbolCategories.PUNCTUATION.size
-                        1 -> SymbolCategories.COMMON_SYMBOLS.size
-                        2 -> SymbolCategories.EMOJIS.size
-                        3 -> SymbolCategories.KAOMOJI.size
+                        1 -> SymbolCategories.EMOJIS.size
+                        2 -> SymbolCategories.KAOMOJI.size
                         else -> 1
                     }
                     currentPageInCategory = (currentPageInCategory - 1 + pagesInCategory) % pagesInCategory
                     updateSymbolGrid(symbolPopupWindow!!.contentView)
                     return true
                 }
-            KeyEvent.KEYCODE_POUND -> {
+                KeyEvent.KEYCODE_POUND -> {
                     // Navigate pages within category
                     val pagesInCategory = when (currentCategory) {
                         0 -> SymbolCategories.PUNCTUATION.size
-                        1 -> SymbolCategories.COMMON_SYMBOLS.size
-                        2 -> SymbolCategories.EMOJIS.size
-                        3 -> SymbolCategories.KAOMOJI.size
+                        1 -> SymbolCategories.EMOJIS.size
+                        2 -> SymbolCategories.KAOMOJI.size
                         else -> 1
                     }
                     currentPageInCategory = (currentPageInCategory + 1) % pagesInCategory
@@ -446,9 +438,8 @@ class QinPadIME : InputMethodService() {
                     val index = keyCode - KeyEvent.KEYCODE_1
                     val symbols = when (currentCategory) {
                         0 -> SymbolCategories.PUNCTUATION
-                        1 -> SymbolCategories.COMMON_SYMBOLS
-                        2 -> SymbolCategories.EMOJIS
-                        3 -> SymbolCategories.KAOMOJI
+                        1 -> SymbolCategories.EMOJIS
+                        2 -> SymbolCategories.KAOMOJI
                         else -> listOf(listOf())
                     }
                     if (currentPageInCategory < symbols.size) {
