@@ -22,6 +22,8 @@ import android.provider.Settings
 import android.content.Intent
 import android.view.ViewGroup
 import android.widget.TextView
+import android.content.ComponentCallbacks2
+import android.app.ActivityManager
 
 class QinPadIME : InputMethodService() {
     private var currentType = InputType.TYPE_CLASS_TEXT
@@ -59,48 +61,107 @@ class QinPadIME : InputMethodService() {
     private var symbolPopupWindow: PopupWindow? = null
     private var currentSymbolPage = 0
     
-    private val symbolPages = listOf(
-        // Common Punctuation
-        listOf(".", ",", "!", "?", "'", "\"", "-", "_", ";"),
-        // More Punctuation
-        listOf(":", "(", ")", "[", "]", "{", "}", "¿", "¡"),
-        // Math Symbols
-        listOf("+", "=", "<", ">", "×", "÷", "±", "%", "≠"),
-        // Currency
-        listOf("$", "€", "£", "¥", "¢", "₹", "₽", "₩", "₪"),
-        // Common Symbols
-        listOf("@", "#", "&", "*", "\\", "/", "|", "~", "^"),
-        // More Symbols
-        listOf("°", "•", "†", "‡", "§", "¶", "©", "®", "™"),
-        // Arrows
-        listOf("←", "→", "↑", "↓", "↔", "↕", "⇐", "⇒", "⇔"),
-        // Smileys
-        listOf("😊", "😂", "🥰", "😎", "🤔", "😅", "😭", "😍", "🥺"),
-        // More Emotions
-        listOf("😤", "😡", "🥱", "😴", "🤮", "🤑", "😱", "🤯", "🥳"),
-        // Hearts & Love
-        listOf("❤️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "💟"),
-        // Hands & People
-        listOf("👍", "👎", "👏", "🙌", "🤝", "👊", "✌️", "🤞", "🤙"),
-        // Nature
-        listOf("🌟", "⭐", "🌙", "☀️", "🌈", "⚡", "❄️", "🌸", "🍀"),
-        // Objects
-        listOf("💡", "⚡", "💣", "⚔️", "🎮", "📱", "💻", "⌚", "📷"),
-        // Food & Drink
-        listOf("☕", "🍕", "🍔", "🌮", "🍜", "🍣", "🍩", "🍪", "🍷"),
-        // Activities
-        listOf("⚽", "🎮", "🎵", "🎨", "🎭", "🎪", "🎯", "🎲", "🎱"),
-        // Travel & Places
-        listOf("🚗", "✈️", "🏖️", "🗽", "🗼", "🏰", "⛰️", "🌋", "🏝️"),
-        // Flags
-        listOf("🏁", "🚩", "🎌", "🏴", "🏳️", "🏳️‍🌈", "🏴‍☠️", "🇺🇳", "⚐"),
-        // Zodiac
-        listOf("♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐"),
-        // More Zodiac & Symbols
-        listOf("♑", "♒", "♓", "⛎", "☮️", "✝️", "☪️", "🕉️", "☯️"),
-        // Music
-        listOf("♩", "♪", "♫", "♬", "🎵", "🎶", "🎼", "🎹", "🎸")
+    private var currentCategory = 0
+    private var currentPageInCategory = 0
+
+    private val categoryTitles = listOf(
+        "Punctuation",
+        "Symbols",
+        "Emojis",
+        "Kaomoji"
     )
+
+    private object SymbolCategories {
+        val PUNCTUATION = listOf(
+            listOf(".", ",", "!", "?", "'", "\"", "-", "_", ";"),  // Basic
+            listOf(":", "(", ")", "[", "]", "{", "}", "¿", "¡")    // Extended
+        )
+
+        val COMMON_SYMBOLS = listOf(
+            // Basic Symbols
+            listOf("@", "#", "&", "*", "\\", "/", "|", "~", "^"),
+            listOf("°", "•", "†", "‡", "§", "¶", "©", "®", "™"),
+            listOf("←", "→", "↑", "↓", "↔", "↕", "⇐", "⇒", "⇔"),
+            // Mathematical Symbols
+            listOf("+", "=", "<", ">", "×", "÷", "±", "%", "≠"),
+            // Currency Symbols
+            listOf("$", "€", "£", "¥", "¢", "₹", "₽", "₩", "₪")
+        )
+
+        val EMOJIS = listOf(
+            // Faces
+            listOf("😊", "😂", "🥰", "😎", "🤔", "😅", "😭", "😍", "🥺"),
+            listOf("😤", "😡", "🥱", "😴", "🤮", "🤑", "😱", "🤯", "🥳"),
+            
+            // Love & Hearts
+            listOf("❤️", "💕", "💞", "💓", "💗", "💖", "💘", "💝", "💟"),
+            
+            // People & Gestures
+            listOf("👍", "👎", "👏", "🙌", "🤝", "👊", "✌️", "🤞", "🤙"),
+            
+            // Nature & Weather
+            listOf("🌟", "⭐", "🌙", "☀️", "🌈", "⚡", "❄️", "🌸", "🍀"),
+            
+            // Activities & Objects
+            listOf("💡", "⚡", "💣", "⚔️", "🎮", "📱", "💻", "⌚", "📷"),
+            listOf("⚽", "🎮", "🎵", "🎨", "🎭", "🎪", "🎯", "🎲", "🎱"),
+            
+            // Food & Drink
+            listOf("☕", "🍕", "🍔", "🌮", "🍜", "🍣", "🍩", "🍪", "🍷"),
+            
+            // Travel & Places
+            listOf("🚗", "✈️", "🏖️", "🗽", "🗼", "🏰", "⛰️", "🌋", "🏝️"),
+            
+            // Flags & Symbols
+            listOf("🏁", "🚩", "🎌", "🏴", "🏳️", "🏳️‍🌈", "🏴‍☠️", "🇺🇳", "⚐"),
+
+            // Zodiac Signs
+            listOf("♈", "♉", "♊", "♋", "♌", "♍", "♎", "♏", "♐"),
+            listOf("♑", "♒", "♓", "⛎", "☮️", "✝️", "☪️", "🕉️", "☯️"),
+
+            // Music Symbols
+            listOf("♩", "♪", "♫", "♬", "🎵", "🎶", "🎼", "🎹", "🎸")
+        )
+
+        val KAOMOJI = listOf(
+            // Happy & Joyful
+            listOf("(^▽^)", "(◕‿◕)", "(｡♥‿♥｡)", "(*^▽^*)", "(＾▽＾)", "(◠‿◠)", "(◕‿◕✿)", "＼(^o^)／", "(◕ᴗ◕✿)"),
+            listOf("(ﾉ◕ヮ◕)ﾉ*:･ﾟ✧", "(●ˊ∀ˋ●)", "(｀∀´)Ψ", "ヽ(°〇°)ﾉ", "(*≧ω≦*)", "(๑˃ᴗ˂)ﻭ", "(✯◡✯)", "(≧∇≦)/", "(●´∀｀●)"),
+            
+            // Sad & Crying
+            listOf("(╥﹏╥)", "(;﹏;)", "(╯︵╰,)", "(っ˘̩╭╮˘̩)っ", "( ˃̣̣̥⌓˂̣̣̥)", "(｡•́︿•̀｡)", "(´;︵;`)", "(｡╯︵╰｡)", "(っ- ‸ -ς)"),
+            listOf("( ╥ω╥ )", "(´;ω;｀)", "｡：ﾟ(｡ﾉω＼｡)ﾟ･｡", "(∩︵∩)", "(｡•́︿•̀｡)", "( ͒˃̩̩⌂˂̩̩ ͒)", "(´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)", "(-̩̩̩-̩̩̩-̩̩̩-̩̩̩-̩̩̩___-̩̩̩-̩̩̩-̩̩̩-̩̩̩)", "(╯︵╰,)"),
+            
+            // Love & Affection
+            listOf("(♡´▽`♡)", "(◍•ᴗ•◍)❤", "(｡♥‿♥｡)", "(✿ ♥‿♥)", "(◕‿◕)♡", "( ˘ ³˘)♥", "(◦'ںˉ◦)", "(´∀｀)♡", "♡(◡‿◡✿)"),
+            listOf("(◕‿◕)♡", "(｡♥‿♥｡)", "(♥ω♥*)", "(◍•ᴗ•◍)✧*。", "ღゝ◡╹)ノ♡", "(◕દ◕)", "(｡♥‿♥｡)", "(◕‿◕✿)", "♡(◡‿◡✿)"),
+            
+            // Surprised & Shocked
+            listOf("(°o°)", "w(°ｏ°)w", "(⊙_⊙)", "（゜◇゜）", "( ; ⊙ ▂ ⊙ )", "(」゜ロ゜)」", "∑(O_O;)", "ヽ(゜Q。)ノ？", "(⊙＿⊙')"),
+            
+            // Angry & Frustrated
+            listOf("(╬ Ò﹏Ó)", "( `ε´ )", "(；￣Д￣)", "(╬⓪益⓪)", "凸(｀△´＋）", "(╬ಠ益ಠ)", "٩(╬ʘ益ʘ╬)۶", "(ノಠ益ಠ)ノ", "(╯°□°）╯︵ ┻━┻"),
+            
+            // Silly & Playful
+            listOf("(｡◝‿◜｡)", "(/◕ヮ◕)/", "ᕕ( ᐛ )ᕗ", "┌( ಠ‿ಠ)┘", "(ﾉ≧∀≦)ﾉ", "(●´ω｀●)ゞ", "(/≧▽≦)/", "ヾ(^▽^*)))", "๑╹ᆺ╹๑"),
+            
+            // Sleepy & Tired
+            listOf("(￣o￣) zzZZzzZZ", "(-.-)Zzz", "(∪｡∪)｡｡｡zzz", "(*´ο`*)", "(。-ω-)zzz", "(｡･ω･｡)ﾉ", "(´～｀)", "⊂(´・ω・｀⊂)", "(≧ω≦)"),
+            
+            // Confused & Thinking
+            listOf("(｢｀･ω･)｢", "('◇')?", "(°ヘ°)", "（・□・；）", "(｡･ω･｡)?", "(●´ω｀●)？", "(⊙_⊙;)", "【・ヘ・?】", "⊙.☉"),
+            
+            // Embarrassed & Shy
+            listOf("(〃∀〃)", "(〃▽〃)", "(/ω＼)", "(⁄ ⁄•⁄ω⁄•⁄ ⁄)", "(｡･･｡)", "(//▽//)", "(*ﾉ∀`*)", "(⁄ ⁄>⁄ ▽ ⁄<⁄ ⁄)", "（/｡＼)")
+        )
+    }
+
+    private val symbolPages = SymbolCategories.run {
+        PUNCTUATION + 
+        COMMON_SYMBOLS + 
+        EMOJIS + 
+        KAOMOJI
+    }
 
     companion object {
         private const val ENGLISH_LAYOUT = 0
@@ -225,6 +286,10 @@ class QinPadIME : InputMethodService() {
         ic?.let { inputConnection ->
             commitCurrentWord(inputConnection)
         }
+        cleanupResources()
+    }
+
+    private fun cleanupResources() {
         ic = null
         resetRotator()
         currentWord.clear()
@@ -236,6 +301,37 @@ class QinPadIME : InputMethodService() {
         symbolPopupWindow?.dismiss()
         symbolPopupWindow = null
         requestHideSelf(0)
+    }
+
+    override fun onTrimMemory(level: Int) {
+        super.onTrimMemory(level)
+        when (level) {
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
+            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
+                // Clear any non-essential caches or resources
+                symbolPopupWindow?.dismiss()
+                symbolPopupWindow = null
+            }
+            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> {
+                // Release UI resources when app goes to background
+                cleanupResources()
+            }
+            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
+            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
+            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
+                // Release as many resources as possible
+                cleanupResources()
+                System.gc()
+            }
+        }
+    }
+
+    override fun onLowMemory() {
+        super.onLowMemory()
+        // Release all non-critical resources
+        cleanupResources()
+        System.gc()
     }
 
     private fun showSymbolPopup() {
@@ -302,12 +398,42 @@ class QinPadIME : InputMethodService() {
     }
 
     private fun updateSymbolGrid(view: View) {
-        val symbols = symbolPages[currentSymbolPage]
-        for (i in 1..9) {
-            val symbolView = view.findViewById<TextView>(
-                resources.getIdentifier("symbol$i", "id", packageName)
-            )
-            symbolView.text = symbols[i - 1]
+        val categoryTitle = view.findViewById<TextView>(R.id.categoryTitle)
+        val pageIndicator = view.findViewById<TextView>(R.id.pageIndicator)
+        
+        // Update category title
+        categoryTitle.text = categoryTitles[currentCategory]
+        
+        // Calculate total pages in current category
+        val pagesInCategory = when (currentCategory) {
+            0 -> SymbolCategories.PUNCTUATION.size
+            1 -> SymbolCategories.COMMON_SYMBOLS.size
+            2 -> SymbolCategories.EMOJIS.size
+            3 -> SymbolCategories.KAOMOJI.size
+            else -> 1
+        }
+        
+        // Update page indicator
+        pageIndicator.text = "Page ${currentPageInCategory + 1}/$pagesInCategory"
+        
+        // Get symbols for current category and page
+        val symbols = when (currentCategory) {
+            0 -> SymbolCategories.PUNCTUATION
+            1 -> SymbolCategories.COMMON_SYMBOLS
+            2 -> SymbolCategories.EMOJIS
+            3 -> SymbolCategories.KAOMOJI
+            else -> listOf(listOf())
+        }
+
+        // Update symbols in grid
+        if (currentPageInCategory < symbols.size) {
+            val currentSymbols = symbols[currentPageInCategory]
+            for (i in 1..9) {
+                val symbolView = view.findViewById<TextView>(
+                    resources.getIdentifier("symbol$i", "id", packageName)
+                )
+                symbolView.text = if (i - 1 < currentSymbols.size) currentSymbols[i - 1] else ""
+            }
         }
     }
 
@@ -316,14 +442,35 @@ class QinPadIME : InputMethodService() {
         if (symbolPopupWindow != null) {
             when (keyCode) {
                 KeyEvent.KEYCODE_STAR -> {
-                    val newPage = if (currentSymbolPage > 0) currentSymbolPage - 1 else symbolPages.size - 1
-                    currentSymbolPage = newPage
+                    // Navigate pages within category
+                    val pagesInCategory = when (currentCategory) {
+                        0 -> SymbolCategories.PUNCTUATION.size
+                        1 -> SymbolCategories.COMMON_SYMBOLS.size
+                        2 -> SymbolCategories.EMOJIS.size
+                        3 -> SymbolCategories.KAOMOJI.size
+                        else -> 1
+                    }
+                    currentPageInCategory = (currentPageInCategory - 1 + pagesInCategory) % pagesInCategory
                     updateSymbolGrid(symbolPopupWindow!!.contentView)
                     return true
                 }
                 KeyEvent.KEYCODE_POUND -> {
-                    val newPage = if (currentSymbolPage < symbolPages.size - 1) currentSymbolPage + 1 else 0
-                    currentSymbolPage = newPage
+                    // Navigate pages within category
+                    val pagesInCategory = when (currentCategory) {
+                        0 -> SymbolCategories.PUNCTUATION.size
+                        1 -> SymbolCategories.COMMON_SYMBOLS.size
+                        2 -> SymbolCategories.EMOJIS.size
+                        3 -> SymbolCategories.KAOMOJI.size
+                        else -> 1
+                    }
+                    currentPageInCategory = (currentPageInCategory + 1) % pagesInCategory
+                    updateSymbolGrid(symbolPopupWindow!!.contentView)
+                    return true
+                }
+                KeyEvent.KEYCODE_0 -> {
+                    // Navigate categories
+                    currentCategory = (currentCategory + 1) % categoryTitles.size
+                    currentPageInCategory = 0
                     updateSymbolGrid(symbolPopupWindow!!.contentView)
                     return true
                 }
@@ -334,11 +481,20 @@ class QinPadIME : InputMethodService() {
                 }
                 in KeyEvent.KEYCODE_1..KeyEvent.KEYCODE_9 -> {
                     val index = keyCode - KeyEvent.KEYCODE_1
-                    val symbols = symbolPages[currentSymbolPage]
-                    if (index < symbols.size) {
-                        ic?.commitText(symbols[index], 1)
-                        symbolPopupWindow?.dismiss()
-                        symbolPopupWindow = null
+                    val symbols = when (currentCategory) {
+                        0 -> SymbolCategories.PUNCTUATION
+                        1 -> SymbolCategories.COMMON_SYMBOLS
+                        2 -> SymbolCategories.EMOJIS
+                        3 -> SymbolCategories.KAOMOJI
+                        else -> listOf(listOf())
+                    }
+                    if (currentPageInCategory < symbols.size) {
+                        val currentSymbols = symbols[currentPageInCategory]
+                        if (index < currentSymbols.size) {
+                            ic?.commitText(currentSymbols[index], 1)
+                            symbolPopupWindow?.dismiss()
+                            symbolPopupWindow = null
+                        }
                     }
                     return true
                 }

@@ -5,19 +5,30 @@
     android:orientation="vertical"
     android:background="@drawable/popup_background"
     android:elevation="24dp"
-    android:padding="16dp">
+    android:padding="8dp">
 
-    <!-- Title -->
+    <!-- Category Title -->
     <TextView
-        android:id="@+id/popupTitle"
+        android:id="@+id/categoryTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select Symbol"
+        android:text="Punctuation"
         android:textColor="@color/black"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="4dp"/>
+
+    <!-- Page Indicator -->
+    <TextView
+        android:id="@+id/pageIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Page 1/3"
+        android:textColor="@color/gray_700"
+        android:textSize="12sp"
+        android:gravity="center"
+        android:layout_marginBottom="8dp"/>
 
     <GridLayout
         android:id="@+id/symbolGrid"
@@ -26,59 +37,60 @@
         android:columnCount="3"
         android:rowCount="3"
         android:alignmentMode="alignBounds"
-        android:useDefaultMargins="true">
+        android:layout_gravity="center"
+        android:useDefaultMargins="false">
 
         <!-- Row 1 -->
         <TextView
             android:id="@+id/symbol1"
             style="@style/SymbolTextStyle"
-            android:text="1"/>
+            android:layout_margin="2dp"/>
         <TextView
             android:id="@+id/symbol2"
             style="@style/SymbolTextStyle"
-            android:text="2"/>
+            android:layout_margin="2dp"/>
         <TextView
             android:id="@+id/symbol3"
             style="@style/SymbolTextStyle"
-            android:text="3"/>
+            android:layout_margin="2dp"/>
 
         <!-- Row 2 -->
         <TextView
             android:id="@+id/symbol4"
             style="@style/SymbolTextStyle"
-            android:text="4"/>
+            android:layout_margin="2dp"/>
         <TextView
             android:id="@+id/symbol5"
             style="@style/SymbolTextStyle"
-            android:text="5"/>
+            android:layout_margin="2dp"/>
         <TextView
             android:id="@+id/symbol6"
             style="@style/SymbolTextStyle"
-            android:text="6"/>
+            android:layout_margin="2dp"/>
 
         <!-- Row 3 -->
         <TextView
             android:id="@+id/symbol7"
             style="@style/SymbolTextStyle"
-            android:text="7"/>
+            android:layout_margin="2dp"/>
         <TextView
             android:id="@+id/symbol8"
             style="@style/SymbolTextStyle"
-            android:text="8"/>
+            android:layout_margin="2dp"/>
         <TextView
             android:id="@+id/symbol9"
             style="@style/SymbolTextStyle"
-            android:text="9"/>
+            android:layout_margin="2dp"/>
     </GridLayout>
 
     <!-- Navigation hint -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="* Previous | # Next"
+        android:text="* Previous | 0 Categories | # Next"
         android:textColor="@color/black"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:gravity="center"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="8dp"/>
 
 </LinearLayout> 
