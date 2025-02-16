@@ -22,8 +22,6 @@ import android.provider.Settings
 import android.content.Intent
 import android.view.ViewGroup
 import android.widget.TextView
-import android.content.ComponentCallbacks2
-import android.app.ActivityManager
 
 class QinPadIME : InputMethodService() {
     private var currentType = InputType.TYPE_CLASS_TEXT
@@ -36,7 +34,7 @@ class QinPadIME : InputMethodService() {
     private var lockFlag = 0
     private var isLongPressing = false  // Add flag for long press detection
     private val rotResetHandler = Handler(Looper.getMainLooper())
-    
+
     // Double-tap handling
     private var lastPoundTapTime = 0L
     private var lastStarTapTime = 0L
@@ -130,7 +128,7 @@ class QinPadIME : InputMethodService() {
             
             // Sad & Crying
             listOf("(╥﹏╥)", "(;﹏;)", "(╯︵╰,)", "(っ˘̩╭╮˘̩)っ", "( ˃̣̣̥⌓˂̣̣̥)", "(｡•́︿•̀｡)", "(´;︵;`)", "(｡╯︵╰｡)", "(っ- ‸ -ς)"),
-            listOf("( ╥ω╥ )", "(´;ω;｀)", "｡：ﾟ(｡ﾉω＼｡)ﾟ･｡", "(∩︵∩)", "(｡•́︿•̀｡)", "( ͒˃̩̩⌂˂̩̩ ͒)", "(´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)", "(-̩̩̩-̩̩̩-̩̩̩-̩̩̩-̩̩̩___-̩̩̩-̩̩̩-̩̩̩-̩̩̩)", "(╯︵╰,)"),
+            listOf("( ╥ω╥ )", "(´;ω;｀)", "｡：ﾟ(｡ﾉω＼｡)ﾟ･｡", "(∩︵∩)", "(｡•́︿•̀｡)", "( ͒˃̩̩⌂˂̩̩ ͒)", "(´°̥̥̥̥̥̥̥̥ω°̥̥̥̥̥̥̥̥｀)", "(-̩̩̩-̩̩̩-̩̩̩-̩̩̩-̩̩̩___-̩̩̩-̩̩̩-̩̩̩-̩̩̩-̩̩̩)", "(╯︵╰,)"),
             
             // Love & Affection
             listOf("(♡´▽`♡)", "(◍•ᴗ•◍)❤", "(｡♥‿♥｡)", "(✿ ♥‿♥)", "(◕‿◕)♡", "( ˘ ³˘)♥", "(◦'ںˉ◦)", "(´∀｀)♡", "♡(◡‿◡✿)"),
@@ -169,7 +167,7 @@ class QinPadIME : InputMethodService() {
         
         private val LAYOUTS = arrayOf(
             arrayOf( // English layout
-                " \n+_$#()[]{}", 
+                " +_$#()[]{}", 
                 ".,?!¿¡'\"1-~@/:\\", 
                 "abc2áäåāǎàçč",
                 "def3éēěè", 
@@ -178,8 +176,8 @@ class QinPadIME : InputMethodService() {
                 "mno6ñņóõöøōǒò", 
                 "pqrs7ßš", 
                 "tuv8úüūǖǘǔǚùǜ",
-                "wxyz9ýž"
-            ),
+            "wxyz9ýž"
+        ),
             arrayOf( // Number layout
                 "0", "1", "2", "3", "4",
                 "5", "6", "7", "8", "9"
@@ -263,11 +261,11 @@ class QinPadIME : InputMethodService() {
             return
         }
         
-        ic = currentInputConnection
-        caps = false
+            ic = currentInputConnection
+            caps = false
         isEnglishLayout = true
         currentSymbolPage = 0
-        resetRotator()
+            resetRotator()
         currentWord.clear()
         isComposing = false
 
@@ -286,10 +284,6 @@ class QinPadIME : InputMethodService() {
         ic?.let { inputConnection ->
             commitCurrentWord(inputConnection)
         }
-        cleanupResources()
-    }
-
-    private fun cleanupResources() {
         ic = null
         resetRotator()
         currentWord.clear()
@@ -301,37 +295,6 @@ class QinPadIME : InputMethodService() {
         symbolPopupWindow?.dismiss()
         symbolPopupWindow = null
         requestHideSelf(0)
-    }
-
-    override fun onTrimMemory(level: Int) {
-        super.onTrimMemory(level)
-        when (level) {
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_LOW,
-            ComponentCallbacks2.TRIM_MEMORY_RUNNING_CRITICAL -> {
-                // Clear any non-essential caches or resources
-                symbolPopupWindow?.dismiss()
-                symbolPopupWindow = null
-            }
-            ComponentCallbacks2.TRIM_MEMORY_UI_HIDDEN -> {
-                // Release UI resources when app goes to background
-                cleanupResources()
-            }
-            ComponentCallbacks2.TRIM_MEMORY_BACKGROUND,
-            ComponentCallbacks2.TRIM_MEMORY_MODERATE,
-            ComponentCallbacks2.TRIM_MEMORY_COMPLETE -> {
-                // Release as many resources as possible
-                cleanupResources()
-                System.gc()
-            }
-        }
-    }
-
-    override fun onLowMemory() {
-        super.onLowMemory()
-        // Release all non-critical resources
-        cleanupResources()
-        System.gc()
     }
 
     private fun showSymbolPopup() {
@@ -454,7 +417,7 @@ class QinPadIME : InputMethodService() {
                     updateSymbolGrid(symbolPopupWindow!!.contentView)
                     return true
                 }
-                KeyEvent.KEYCODE_POUND -> {
+            KeyEvent.KEYCODE_POUND -> {
                     // Navigate pages within category
                     val pagesInCategory = when (currentCategory) {
                         0 -> SymbolCategories.PUNCTUATION.size
@@ -495,8 +458,8 @@ class QinPadIME : InputMethodService() {
                             symbolPopupWindow?.dismiss()
                             symbolPopupWindow = null
                         }
-                    }
-                    return true
+                }
+                return true
                 }
                 else -> return true
             }
@@ -505,7 +468,7 @@ class QinPadIME : InputMethodService() {
         if (event.repeatCount > 0) {
             return true
         }
-
+        
         ic?.let { inputConnection ->
             when (keyCode) {
                 KeyEvent.KEYCODE_BACK, KeyEvent.KEYCODE_DEL -> return handleBackspace(inputConnection)

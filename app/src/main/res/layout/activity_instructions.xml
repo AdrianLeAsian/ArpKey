@@ -171,7 +171,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Special Characters"
+                        android:text="Symbol Categories"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         android:textColor="@color/black"/>
@@ -180,7 +180,71 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="• Symbol Popup: Access by double-tapping *\n• Navigate Pages: Use * and # in popup\n• Select Symbol: Press number key (1-9)\n• Close Popup: Press back key"
+                        android:text="• Punctuation: Common punctuation marks\n• Symbols: Mathematical, currency, and special symbols\n• Emojis: Faces, hearts, activities, and more\n• Kaomoji: Text-based Japanese emoticons"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Navigation Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Symbol Navigation"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="• Open Symbol Menu: Double-tap *\n• Switch Categories: Press 0\n• Previous Page: Press *\n• Next Page: Press #\n• Select Symbol: Press 1-9\n• Close Menu: Press back key"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Tips Section -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                app:cardCornerRadius="8dp"
+                app:cardElevation="4dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Quick Tips"
+                        android:textSize="20sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/black"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="• Each category has multiple pages of symbols\n• Current page and category are shown at the top\n• Symbols are arranged in a 3x3 grid for easy selection\n• Use the page indicator to track your location\n• Frequently used symbols are placed on earlier pages"
                         android:textSize="16sp"
                         android:textColor="@color/black"/>
                 </LinearLayout>
