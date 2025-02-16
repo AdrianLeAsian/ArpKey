@@ -169,7 +169,7 @@ class QinPadIME : InputMethodService() {
         
         private val LAYOUTS = arrayOf(
             arrayOf( // English layout
-                " +\n_$#()[]{}", 
+                " \n+_$#()[]{}", 
                 ".,?!¿¡'\"1-~@/:\\", 
                 "abc2áäåāǎàçč",
                 "def3éēěè", 
